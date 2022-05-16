@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Practica002</string>
+    <string name="txtNombre">Nombre</string>
+    <string name="btnEnviar">Enviar</string>
+    <string name="btnRegresar">Regresar</string>
+
+    <string name="menuHome">Home</string>
+    <string name="menuGallery">Galeria</string>
+    <string name="menuSlideshow">Slideshow</string>
+    <string name="menuTools">Herramientas</string>
+</resources>
