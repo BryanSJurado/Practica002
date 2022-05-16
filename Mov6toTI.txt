@@ -1,0 +1,235 @@
+MAIN1
+private int codigoRequerido=1;
+
+    String nombre;
+    String apellido;
+    String base;
+    String exponente;
+    String numero;
+    String potencia;
+
+    private TextView tvNombre;
+    private TextView tvApellido;
+    private TextView tvBase;
+    private TextView tvExponente;
+    private TextView tvFactorial;
+    private TextView tvPotencia;
+
+    private Button btnMostrar;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        tvNombre=findViewById(R.id.tvNombrePrimera);
+        tvApellido=findViewById(R.id.tvApellidoPrimera);
+        tvBase=findViewById(R.id.tvBasePrimera);
+        tvExponente=findViewById(R.id.tvExponentePrimera);
+        tvFactorial=findViewById(R.id.tvFactorialPrimera);
+        tvPotencia=findViewById(R.id.tvPotenciaPrimera);
+
+        btnMostrar=findViewById(R.id.btnMostrarResultados);
+
+        btnMostrar.setEnabled(false);
+
+    }
+
+    public void onClickSiguiente(View view){
+        Intent intent = new Intent(this, SegundaActivity.class);
+        startActivityForResult(intent, codigoRequerido);
+    }
+
+    public void onClickMostrarResultados(View view){
+
+        tvNombre.setText(nombre.toUpperCase(Locale.ROOT));
+        tvApellido.setText(apellido.toUpperCase(Locale.ROOT));
+        tvBase.setText(base);
+        tvExponente.setText(exponente);
+        tvFactorial.setText(String.valueOf(factorial(Double.valueOf(numero))));
+        tvPotencia.setText(String.valueOf(potencia(Integer.valueOf(base), Integer.valueOf(exponente))));
+
+
+    }
+
+    public double factorial(double numero){
+        double factorial = 1;
+
+        while ( numero!=0) {
+            factorial=factorial*numero; numero--;
+        }
+        return factorial;
+    }
+
+
+    public int potencia(int base, int exponente){
+        int result;
+        if(exponente == 0){
+            result = 1;
+        }
+        else{
+            result = base * potencia(base, exponente - 1);
+        }
+        return result;
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        //Obtener los datos regresados desde la ventana hija.
+
+            String informacion;
+            informacion=data.getDataString();
+            String[] datos=informacion.split(",");
+
+            nombre=datos[0];
+            apellido=datos[1];
+            base=datos[2];
+            exponente=datos[3];
+            numero=datos[4];
+
+        btnMostrar.setEnabled(true);
+
+
+    }
+
+
+-----MAIN2------
+private EditText etNombre;
+    private EditText etBase;
+
+    private String apellido;
+    private String exponente;
+    private String numero;
+
+
+    private int codigoRequerido=1;
+
+    private Button btnCerrar;
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_segunda);
+
+        this.etNombre=findViewById(R.id.etNombre);
+        this.etBase=findViewById(R.id.etBase);
+
+        btnCerrar=findViewById(R.id.btnCerrarSegunda);
+
+        btnCerrar.setEnabled(false);
+
+    }
+
+    public void onClickSiguiente(View view){
+        String nombre=etNombre.getText().toString();
+        String base=etBase.getText().toString();
+
+        if(!nombre.matches("") && !base.matches("")){
+            Intent intent=new Intent(this, TerceraActivity.class);
+
+            //Enviar información desde otra activity
+            intent.putExtra("key_nombre", nombre);
+            intent.putExtra("key_base", base);
+
+
+            startActivityForResult(intent, codigoRequerido);
+        }else{
+            Toast.makeText(this, "Rellenar campos obligatorios.", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    public void onClickCerrar(View view){
+        String nombre=etNombre.getText().toString();
+        String base=etBase.getText().toString();
+
+
+        if(!nombre.matches("") && !base.matches("")){
+
+            Intent intent=new Intent();
+            intent.setData(Uri.parse(nombre+"," + apellido+","+base+","+exponente+","+numero));
+
+
+            setResult(Activity.RESULT_OK, intent);
+
+            finish();
+        }else{
+            Toast.makeText(this, "Rellenar campos obligatorios.", Toast.LENGTH_LONG).show();
+        }
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        //Obtener los datos regresados desde la ventana hija.
+
+            String informacion;
+            informacion=data.getDataString();
+            String[] datos=informacion.split(",");
+
+            apellido=datos[0];
+            exponente=datos[1];
+            numero=datos[2];
+
+        btnCerrar.setEnabled(true);
+
+        etNombre.setEnabled(false);
+        etBase.setEnabled(false);
+
+    }
+
+
+
+---MAIN3*-----
+private EditText etNombre;
+    private EditText etBase;
+
+    private EditText etApellido;
+    private EditText etExponente;
+    private EditText etNumero;
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_tercera);
+
+        etNombre = findViewById(R.id.etNombreTercera);
+
+        String nombre = getIntent().getStringExtra("key_nombre");
+        etNombre.setText(nombre.toUpperCase(Locale.ROOT));
+
+        etBase = findViewById(R.id.etBaseTercera);
+
+        String base = getIntent().getStringExtra("key_base");
+        etBase.setText(base);
+
+        etApellido=findViewById(R.id.etApellidoTercera);
+        etExponente=findViewById(R.id.etExponenteTercera);
+        etNumero=findViewById(R.id.etNumeroTercera);
+
+        etNombre.setEnabled(false);
+        etBase.setEnabled(false);
+
+    }
+
+    public void onClickCerrar(View view){
+        String apellido=etApellido.getText().toString();
+        String exponente=etExponente.getText().toString();
+        String numero=etNumero.getText().toString();
+
+
+
+        if(!apellido.matches("") && !exponente.matches("") && !numero.matches("")){
+            // Regresar el item seleccionado.
+
+            Intent intent=new Intent();
+            intent.setData(Uri.parse(apellido+","+exponente+","+numero));
+
+
+            setResult(Activity.RESULT_OK, intent);
+
+            finish();
+        }else{
+            Toast.makeText(this, "Rellenar campos obligatorios.", Toast.LENGTH_LONG).show();
+        }
+    }
